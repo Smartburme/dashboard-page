@@ -3,7 +3,16 @@
    - Supports: text + optional image (base64), local history, generator mocks
 */
 
-const API_ENDPOINT = 'https://morning-cell-1282.mysvm.workers.dev'; // your worker
+    // Cloudflare Worker API Configuration
+    const API_CONFIG = {
+        endpoint: 'https://morning-cell-1282.mysvm.workers.dev/api/chat',
+        retries: 3,
+        timeout: 10000,
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    };
 
 // DOM
 const userInput = document.getElementById('userInput');
