@@ -1,0 +1,39 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="64"
+  height="64"
+  viewBox="0 0 64 64"
+  fill="none"
+>
+  <!-- Chat bubble -->
+  <rect
+    x="8"
+    y="12"
+    width="48"
+    height="36"
+    rx="8"
+    ry="8"
+    fill="#4F46E5"
+    stroke="#3730A3"
+    stroke-width="2"
+  />
+  <!-- Tail of chat bubble -->
+  <path
+    d="M20 48 L24 44 L28 48"
+    fill="#4F46E5"
+    stroke="#3730A3"
+    stroke-width="2"
+    stroke-linejoin="round"
+  />
+  <!-- AI / Bot face: two eyes -->
+  <circle cx="24" cy="28" r="4" fill="#E0E7FF" />
+  <circle cx="40" cy="28" r="4" fill="#E0E7FF" />
+  <!-- Mouth / smile -->
+  <path
+    d="M24 38 Q32 44 40 38"
+    stroke="#E0E7FF"
+    stroke-width="3"
+    fill="none"
+    stroke-linecap="round"
+  />
+</svg>
