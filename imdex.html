@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="my" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WAYNE AI - မြန်မာ AI အကူအညီ</title>
+
+  <!-- styles -->
+  <link rel="stylesheet" href="assets/css/main.css" />
+
+  <!-- fonts & icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="icon" href="assets/image/icon.png" type="image/png">
+</head>
+<body>
+  <div class="app-grid">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar" aria-label="Sidebar - history and controls">
+      <div class="sidebar-top">
+        <div class="brand">
+          <img src="assets/image/icon.png" alt="WAYNE AI" class="brand-logo">
+          <div>
+            <h2>WAYNE AI</h2>
+            <small class="muted">မြန်မာ AI အကူအညီ</small>
+          </div>
+        </div>
+        <div class="sidebar-controls">
+          <button id="newChatBtn" class="btn primary"><i class="fas fa-plus"></i> New Chat</button>
+          <button id="clearHistoryBtn" class="btn icon" title="Clear history"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+
+      <div class="history-section">
+        <h3>Chat History</h3>
+        <ul id="historyList" class="history-list" role="list"></ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <a href="pages/settings.html" class="link"><i class="fas fa-cog"></i> Settings</a>
+        <a href="pages/about.html" class="link"><i class="fas fa-info-circle"></i> About</a>
+      </div>
+    </aside>
+
+    <!-- MAIN CHAT -->
+    <main class="chat-area" id="chatArea" aria-live="polite">
+      <header class="chat-header">
+        <div class="title">
+          <i class="fas fa-robot"></i>
+          <h1>WAYNE AI</h1>
+        </div>
+        <div class="header-actions">
+          <button id="themeToggle" class="icon" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+          <button id="voiceToggle" class="icon" aria-label="Voice (not configured)"><i class="fas fa-microphone"></i></button>
+        </div>
+      </header>
+
+      <section id="chatBody" class="chat-body" role="log"></section>
+
+      <footer class="chat-footer">
+        <div class="suggestions" id="suggestions">
+          <button class="chip">မနက်ဖြန်ရာသီဥတု</button>
+          <button class="chip">သတင်းများ</button>
+          <button class="chip">အကြံဉာဏ်များ</button>
+        </div>
+
+        <div class="input-row">
+          <label for="imageUpload" class="upload-label" title="Attach image">
+            <input id="imageUpload" type="file" accept="image/*" hidden>
+            <i class="fas fa-image"></i>
+          </label>
+
+          <div id="imagePreview" class="image-preview" aria-hidden="true"></div>
+
+          <input id="userInput" class="input" type="text" placeholder="သင့်မေးခွန်းကို ရိုက်ထည့်ပါ..." autocomplete="off" aria-label="Type message">
+
+          <button id="sendButton" class="btn primary" title="Send"><i class="fas fa-paper-plane"></i></button>
+        </div>
+
+        <div class="status-row">
+          <small id="statusText" class="muted">Local history saved</small>
+        </div>
+      </footer>
+    </main>
+
+    <!-- RIGHT PANEL -->
+    <aside class="right-panel" aria-label="Generator and outputs">
+      <div class="panel-section">
+        <h3>Generator</h3>
+        <textarea id="promptInput" rows="3" placeholder="Prompt (မြန်မာ/English) — image reference allowed"></textarea>
+        <div class="gen-controls">
+          <button id="genTextBtn" class="btn">Generate Text</button>
+          <button id="genImageBtn" class="btn">Generate Image</button>
+          <button id="genCodeBtn" class="btn">Generate Code</button>
+        </div>
+      </div>
+
+      <div class="panel-section outputs">
+        <h3>Outputs</h3>
+        <div id="outputsList" class="outputs-list"></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- main script -->
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
