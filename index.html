@@ -1,109 +1,80 @@
-<!DOCTYPE html>
-<html lang="my" data-theme="light">
+<!doctype html>
+<html lang="my">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WAYNE AI - မြန်မာ AI အကူအညီ</title>
+  <title>Wayne Chat Bot</title>
 
-  <!-- styles -->
-  <link rel="stylesheet" href="assets/css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/chat.css" />
 
-  <!-- fonts & icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <link rel="icon" href="assets/image/icon.png" type="image/png">
+  <!-- Try to load config/env.js first, fall back to env.example.js -->
+  <script>
+    (function(){
+      var s = document.createElement('script');
+      s.src = 'config/env.js';
+      s.onload = function(){ console.log('Loaded config/env.js'); };
+      s.onerror = function(){
+        var s2 = document.createElement('script');
+        s2.src = 'config/env.example.js';
+        document.head.appendChild(s2);
+        console.warn('config/env.js not found — loaded env.example.js (demo).');
+      };
+      document.head.appendChild(s);
+    })();
+  </script>
 </head>
 <body>
-  <div class="app-grid">
-    <!-- SIDEBAR -->
-    <aside class="sidebar" id="sidebar" aria-label="Sidebar - history and controls">
-      <div class="sidebar-top">
-        <div class="brand">
-          <img src="assets/image/icon.png" alt="WAYNE AI" class="brand-logo">
-          <div>
-            <h2>WAYNE AI</h2>
-            <small class="muted">မြန်မာ AI အကူအညီ</small>
-          </div>
+  <main class="app">
+    <header class="topbar">
+      <div class="left">
+        <button id="clearBtn" class="icon-btn" title="Clear history">🗑️</button>
+      </div>
+      <div class="title">Wayne Chat Bot</div>
+      <div class="right">
+        <button id="themeBtn" class="icon-btn" title="Toggle theme">🌗</button>
+        <img src="assets/icon.svg" alt="icon" class="app-icon">
+      </div>
+    </header>
+
+    <section class="chat-wrapper">
+      <div id="messages" class="messages" role="log" aria-live="polite"></div>
+
+      <div class="bottom-bar">
+        <div class="left-tools">
+          <button id="attachBtn" class="icon-btn" title="Upload (coming soon)">⚓</button>
         </div>
-        <div class="sidebar-controls">
-          <button id="newChatBtn" class="btn primary"><i class="fas fa-plus"></i> New Chat</button>
-          <button id="clearHistoryBtn" class="btn icon" title="Clear history"><i class="fas fa-trash"></i></button>
+
+        <div class="input-area">
+          <input id="messageInput" autocomplete="off" placeholder="Type your message and press Enter..." />
+          <select id="modeSelect" title="Mode">
+            <option value="chat">Chat</option>
+            <option value="image">Image</option>
+            <option value="code">Code</option>
+          </select>
+        </div>
+
+        <div class="right-tools">
+          <button id="sendBtn" class="send-btn" title="Send">ᐷ</button>
         </div>
       </div>
+    </section>
 
-      <div class="history-section">
-        <h3>Chat History</h3>
-        <ul id="historyList" class="history-list" role="list"></ul>
+    <!-- message template -->
+    <template id="msg-template">
+      <div class="message">
+        <div class="bubble"></div>
+        <time class="ts"></time>
       </div>
+    </template>
+  </main>
 
-      <div class="sidebar-footer">
-        <a href="pages/settings.html" class="link"><i class="fas fa-cog"></i> Settings</a>
-        <a href="pages/about.html" class="link"><i class="fas fa-info-circle"></i> About</a>
-      </div>
-    </aside>
-
-    <!-- MAIN CHAT -->
-    <main class="chat-area" id="chatArea" aria-live="polite">
-      <header class="chat-header">
-        <div class="title">
-          <i class="fas fa-robot"></i>
-          <h1>WAYNE AI</h1>
-        </div>
-        <div class="header-actions">
-          <button id="themeToggle" class="icon" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
-          <button id="voiceToggle" class="icon" aria-label="Voice (not configured)"><i class="fas fa-microphone"></i></button>
-        </div>
-      </header>
-
-      <section id="chatBody" class="chat-body" role="log"></section>
-
-      <footer class="chat-footer">
-        <div class="suggestions" id="suggestions">
-          <button class="chip">မနက်ဖြန်ရာသီဥတု</button>
-          <button class="chip">သတင်းများ</button>
-          <button class="chip">အကြံဉာဏ်များ</button>
-        </div>
-
-        <div class="input-row">
-          <label for="imageUpload" class="upload-label" title="Attach image">
-            <input id="imageUpload" type="file" accept="image/*" hidden>
-            <i class="fas fa-image"></i>
-          </label>
-
-          <div id="imagePreview" class="image-preview" aria-hidden="true"></div>
-
-          <input id="userInput" class="input" type="text" placeholder="သင့်မေးခွန်းကို ရိုက်ထည့်ပါ..." autocomplete="off" aria-label="Type message">
-
-          <button id="sendButton" class="btn primary" title="Send"><i class="fas fa-paper-plane"></i></button>
-        </div>
-
-        <div class="status-row">
-          <small id="statusText" class="muted">Local history saved</small>
-        </div>
-      </footer>
-    </main>
-
-    <!-- RIGHT PANEL -->
-    <aside class="right-panel" aria-label="Generator and outputs">
-      <div class="panel-section">
-        <h3>Generator</h3>
-        <textarea id="promptInput" rows="3" placeholder="Prompt (မြန်မာ/English) — image reference allowed"></textarea>
-        <div class="gen-controls">
-          <button id="genTextBtn" class="btn">Generate Text</button>
-          <button id="genImageBtn" class="btn">Generate Image</button>
-          <button id="genCodeBtn" class="btn">Generate Code</button>
-        </div>
-      </div>
-
-      <div class="panel-section outputs">
-        <h3>Outputs</h3>
-        <div id="outputsList" class="outputs-list"></div>
-      </div>
-    </aside>
-  </div>
-
-  <!-- main script -->
-  <script src="assets/js/main.js"></script>
+  <!-- core scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/animation.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
