@@ -1,22 +1,24 @@
 {
-  "name": "wayne-worker",
+  "name": "wayne-ai-chat-worker",
   "version": "1.0.0",
-  "description": "Cloudflare Worker proxy for DeepSeek chat API",
-  "main": "index.js",
+  "description": "Cloudflare Worker for Wayne AI Chat Dashboard",
+  "main": "worker.js",
+  "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
+    "start": "wrangler dev",
+    "build": "echo 'No build step needed for plain Worker'",
     "deploy": "wrangler publish"
   },
   "keywords": [
     "cloudflare",
     "worker",
-    "deepseek",
-    "api",
-    "proxy"
+    "ai",
+    "chat"
   ],
-  "author": "Your Name",
+  "author": "Wayne",
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/wrangler": "^3.5.0"
-  }
+    "wrangler": "^3.8.0"
+  },
+  "dependencies": {}
 }
