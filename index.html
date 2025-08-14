@@ -1,80 +1,271 @@
 <!doctype html>
 <html lang="my">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Wayne Chat Bot</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Loading — Wayne AI</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%236e6dc9'/%3E%3C/svg%3E">
+<style>
+  /* --- Basic page reset --- */
+  *{box-sizing:border-box} html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;color:#fff}
+  body{
+    display:grid;place-items:center;
+    background: radial-gradient(1200px 800px at 10% 20%, rgba(255,255,255,0.05), transparent 8%),
+                radial-gradient(800px 600px at 90% 80%, rgba(255,255,255,0.03), transparent 6%),
+                linear-gradient(135deg,#6e6dc9 0%, #1200FF 100%);
+    overflow:hidden;
+  }
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/chat.css" />
+  /* --- container --- */
+  .wrap{
+    width:min(980px,92vw);
+    padding:28px;
+    border-radius:20px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    box-shadow: 0 10px 40px rgba(8,8,20,0.45), inset 0 1px 0 rgba(255,255,255,0.03);
+    display:flex; gap:18px; align-items:center;
+  }
 
-  <!-- Try to load config/env.js first, fall back to env.example.js -->
-  <script>
-    (function(){
-      var s = document.createElement('script');
-      s.src = 'config/env.js';
-      s.onload = function(){ console.log('Loaded config/env.js'); };
-      s.onerror = function(){
-        var s2 = document.createElement('script');
-        s2.src = 'config/env.example.js';
-        document.head.appendChild(s2);
-        console.warn('config/env.js not found — loaded env.example.js (demo).');
-      };
-      document.head.appendChild(s);
-    })();
-  </script>
+  /* --- left side: animated hero --- */
+  .art {
+    width:46%;
+    min-width:320px;
+    display:flex; flex-direction:column; gap:12px; align-items:center;
+  }
+
+  .orb-wrap{ position:relative; width:220px; height:220px; display:grid; place-items:center; }
+  .orb{
+    width:140px; height:140px; border-radius:999px;
+    background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.25), rgba(255,255,255,0.06) 20%, rgba(0,0,0,0.06) 60%),
+                linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    box-shadow: 0 18px 50px rgba(0,0,0,0.35), 0 0 60px rgba(110,109,201,0.28);
+    display:grid; place-items:center;
+    transform-origin:center;
+    animation: floaty 4s ease-in-out infinite;
+    border:1px solid rgba(255,255,255,0.06);
+  }
+  @keyframes floaty{ 0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)} }
+
+  /* orbit ring */
+  .ring{
+    position:absolute; width:260px; height:260px; border-radius:999px;
+    border:2px solid rgba(255,255,255,0.06);
+    filter:blur(6px);
+    animation: spin 9s linear infinite;
+    box-shadow: 0 0 40px rgba(0,0,0,0.2);
+  }
+  @keyframes spin{ to{ transform: rotate(360deg) } }
+
+  /* small particles floating around */
+  .particle{ position:absolute; width:12px; height:12px; border-radius:6px; background: rgba(255,255,255,0.85); box-shadow: 0 6px 18px rgba(0,0,0,0.35); opacity:0.9; transform-origin:center; }
+  .p1{ top:6%; left:22%; animation: p1 5s ease-in-out infinite; }
+  .p2{ top:78%; left:14%; width:8px;height:8px;border-radius:4px; animation: p2 6s ease-in-out infinite; opacity:0.8 }
+  .p3{ top:18%; left:78%; width:10px;height:10px;border-radius:5px; animation: p3 5.6s ease-in-out infinite; opacity:0.85 }
+  @keyframes p1{ 0%{transform:translateY(0) scale(1)}50%{transform:translateY(-18px) scale(0.9)}100%{transform:translateY(0) scale(1)}}
+  @keyframes p2{ 0%{transform:translateY(0) scale(1)}50%{transform:translateY(12px) scale(1.1)}100%{transform:translateY(0) scale(1)}}
+  @keyframes p3{ 0%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(0.95)}100%{transform:translateY(0) scale(1)}}
+
+  /* small SVG icons orbiting */
+  .icon-orbit{ position:absolute; width:44px; height:44px; display:grid; place-items:center; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); box-shadow:0 8px 20px rgba(0,0,0,0.25);}
+  .io1{ transform:translate(-80px,-80px) rotate(0deg); animation: orbit1 10s linear infinite; left:50%; top:50%; }
+  .io2{ transform:translate(88px,-48px); animation: orbit2 12s linear infinite; left:50%; top:50%; }
+  .io3{ transform:translate(92px,68px); animation: orbit3 11s linear infinite; left:50%; top:50%; }
+  @keyframes orbit1{ to{ transform:translate(-80px,-80px) rotate(360deg) } }
+  @keyframes orbit2{ to{ transform:translate(88px,-48px) rotate(-360deg) } }
+  @keyframes orbit3{ to{ transform:translate(92px,68px) rotate(360deg) } }
+
+  /* --- right side: text + progress --- */
+  .meta { width:54%; padding-left:18px; display:flex; flex-direction:column; gap:12px; }
+  .title { font-size:1.35rem; font-weight:700; letter-spacing:-0.01em; color:#fff; display:flex; gap:10px; align-items:center; }
+  .subtitle { color:rgba(255,255,255,0.85); font-size:0.98rem }
+  .desc { color:rgba(255,255,255,0.78); font-size:0.95rem; line-height:1.45 }
+
+  /* progress bar visuals */
+  .progress-wrap{ margin-top:8px; }
+  .progress{
+    height:12px; width:100%; background:rgba(255,255,255,0.06); border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,0.04);
+  }
+  .progress > i{
+    display:block; height:100%; width:0%; background: linear-gradient(90deg, rgba(255,255,255,0.18), rgba(255,255,255,0.30));
+    box-shadow: 0 6px 24px rgba(110,109,201,0.18);
+    border-radius:999px;
+    transition: width 200ms linear;
+    position:relative;
+    overflow:hidden;
+  }
+  .progress > i::after{
+    content:""; position:absolute; right: -30px; top:0; width:60px; height:100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+    animation: sheen 1.6s linear infinite;
+  }
+  @keyframes sheen{ 0%{ right:-30px } 100%{ right:100% } }
+
+  /* footer actions */
+  .small-actions{ display:flex; gap:8px; align-items:center; margin-top:10px; }
+  .btn {
+    padding:10px 14px; border-radius:10px; background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.04);
+    display:inline-flex; gap:8px; align-items:center; font-weight:600; cursor:pointer;
+  }
+  .btn.glow { box-shadow: 0 8px 28px rgba(110,109,201,0.22); border:1px solid rgba(255,255,255,0.08) }
+
+  /* responsive */
+  @media (max-width:880px){
+    .wrap{ flex-direction:column; width:92vw; }
+    .art, .meta{ width:100% }
+    .art { order:1 }
+    .meta { order:2; padding-left:0 }
+  }
+</style>
 </head>
 <body>
-  <main class="app">
-    <header class="topbar">
-      <div class="left">
-        <button id="clearBtn" class="icon-btn" title="Clear history">🗑️</button>
-      </div>
-      <div class="title">Wayne Chat Bot</div>
-      <div class="right">
-        <button id="themeBtn" class="icon-btn" title="Toggle theme">🌗</button>
-        <img src="assets/icon.svg" alt="icon" class="app-icon">
-      </div>
-    </header>
+  <div class="wrap" role="status" aria-live="polite" aria-label="Loading Wayne AI">
+    <!-- left artwork -->
+    <div class="art" aria-hidden="true">
+      <div class="orb-wrap">
+        <div class="ring" style="border-image: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)) 1;"></div>
 
-    <section class="chat-wrapper">
-      <div id="messages" class="messages" role="log" aria-live="polite"></div>
-
-      <div class="bottom-bar">
-        <div class="left-tools">
-          <button id="attachBtn" class="icon-btn" title="Upload (coming soon)">⚓</button>
+        <div class="orb" id="mainOrb" aria-hidden="true">
+          <!-- inner SVG logo (subtle) -->
+          <svg width="68" height="68" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="6" y="6" width="52" height="52" rx="12" fill="rgba(255,255,255,0.06)"/>
+            <g transform="translate(14,14)" fill="white" opacity="0.95">
+              <rect x="6" y="2" width="28" height="18" rx="3" fill="white" opacity="0.18"/>
+              <circle cx="12" cy="18" r="3" fill="white"/>
+              <circle cx="26" cy="18" r="3" fill="white"/>
+            </g>
+          </svg>
         </div>
 
-        <div class="input-area">
-          <input id="messageInput" autocomplete="off" placeholder="Type your message and press Enter..." />
-          <select id="modeSelect" title="Mode">
-            <option value="chat">Chat</option>
-            <option value="image">Image</option>
-            <option value="code">Code</option>
-          </select>
-        </div>
+        <div class="particle p1"></div>
+        <div class="particle p2"></div>
+        <div class="particle p3"></div>
 
-        <div class="right-tools">
-          <button id="sendBtn" class="send-btn" title="Send">ᐷ</button>
+        <div class="icon-orbit io1" title="Chat">
+          <!-- speech icon -->
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z" fill="white" fill-opacity="0.9"/></svg>
+        </div>
+        <div class="icon-orbit io2" title="Image">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14l4-3 3 3 6-6 5 5z" fill="white" fill-opacity="0.9"/></svg>
+        </div>
+        <div class="icon-orbit io3" title="Code">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M8.293 6.293L2.586 12l5.707 5.707 1.414-1.414L5.414 12l4.293-4.293-1.414-1.414zM15.707 6.293l1.414 1.414L18.586 12l-1.465 1.293 1.586 1.414L21.414 12l-5.707-5.707-1.414 1.414z" fill="white" fill-opacity="0.95"/></svg>
         </div>
       </div>
-    </section>
 
-    <!-- message template -->
-    <template id="msg-template">
-      <div class="message">
-        <div class="bubble"></div>
-        <time class="ts"></time>
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div style="font-weight:700;font-size:1.05rem;color:white;margin-top:6px">Wayne AI</div>
+        <div style="margin-top:6px;color:rgba(255,255,255,0.8);font-size:0.92rem;text-align:center;max-width:260px">
+          Smart chat is loading — preparing your session, polishing the sarcasm.
+        </div>
       </div>
-    </template>
-  </main>
+    </div>
 
-  <!-- core scripts -->
-  <script src="js/storage.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/animation.js"></script>
-  <script src="js/theme.js"></script>
-  <script src="js/app.js"></script>
+    <!-- right meta -->
+    <div class="meta">
+      <div class="title">
+        <span>Preparing your workspace</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:0.9"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14.5V7h-2v8.5z" fill="white"/></svg>
+      </div>
+
+      <div class="subtitle">A few seconds — loading UI, assets and model hooks.</div>
+      <div class="desc">အမြန်တင်တက်အောင် optimized လုပ်ထားပါတယ်။ မင်းဆင်တူလုပ်ရင် API မှာ session ဖန်တီးပြီးတော့ စတင်ချိန်မှာ အချိန်ကိုယ်တိုင် သတ်မှတ်ထားတဲ့ loading ကို စိတ်ချလက်ခံပါ။</div>
+
+      <!-- progress -->
+      <div class="progress-wrap">
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Loading progress">
+          <i id="progressFill"></i>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:0.86rem;color:rgba(255,255,255,0.85)">
+          <div id="progText">Initializing</div>
+          <div id="progPct">0%</div>
+        </div>
+      </div>
+
+      <!-- thinking / small actions -->
+      <div class="small-actions">
+        <div class="btn glow" id="btnCancel" title="Cancel loading (go back)">
+          <!-- cancel icon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Cancel
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.9)">
+          <div class="thinking">
+            <span class="dots"><span></span><span></span><span></span></span>
+          </div>
+          <div style="font-weight:600">Waiting for server</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Controlled 3-second loader with smooth progress and redirect.
+  (function(){
+    const totalMs = 3000; // total wait before redirect
+    const start = performance.now();
+    const fill = document.getElementById('progressFill');
+    const pct = document.getElementById('progPct');
+    const text = document.getElementById('progText');
+    const cancel = document.getElementById('btnCancel');
+
+    // staged messages for flavor
+    const stages = [
+      {t:0, txt:'Initializing'},
+      {t:700, txt:'Loading UI components'},
+      {t:1400, txt:'Connecting modules'},
+      {t:2100, txt:'Finalizing'},
+      {t:2600, txt:'Almost ready'}
+    ];
+
+    let canceled = false;
+    cancel.addEventListener('click', ()=> {
+      canceled = true;
+      text.textContent = 'Cancelled';
+      pct.textContent = '0%';
+      fill.style.width = '0%';
+      // go back one page if possible
+      setTimeout(()=>{ try{ history.back(); }catch(e){} }, 400);
+    });
+
+    function update(now){
+      if(canceled) return;
+      const elapsed = Math.min(now - start, totalMs);
+      const ratio = elapsed / totalMs;
+      const percent = Math.round(ratio * 100);
+      fill.style.width = percent + '%';
+      pct.textContent = percent + '%';
+
+      // pick stage text
+      let s = stages[0].txt;
+      for(const st of stages) if(elapsed >= st.t) s = st.txt;
+      text.textContent = s;
+
+      if(elapsed < totalMs){
+        requestAnimationFrame(update);
+      } else {
+        // final flourish
+        fill.style.width = '100%';
+        pct.textContent = '100%';
+        text.textContent = 'Done — redirecting';
+        // small delay for user to see 100%
+        setTimeout(()=> {
+          // final redirect to dashboard page
+          window.location.href = 'pages/dashboard.html';
+        }, 350);
+      }
+    }
+
+    // subtle random motion on orb (slight color pulse)
+    const orb = document.getElementById('mainOrb');
+    let pulse = 0;
+    setInterval(()=> {
+      pulse = (pulse + 0.04) % (Math.PI * 2);
+      const s = 1 + Math.sin(pulse) * 0.012;
+      orb.style.transform = `scale(${s})`;
+    }, 30);
+
+    requestAnimationFrame(update);
+  })();
+</script>
 </body>
-</html>
+          </html>
