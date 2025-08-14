@@ -1,0 +1,8 @@
+name = "wayne-worker-v1"
+main = "worker.js"
+compatibility_date = "2025-08-14"
+
+[build]
+command = "npm install"
+[env.production]
+# Optional environment secrets can be referenced here
