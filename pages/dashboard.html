@@ -8,7 +8,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body {
-      background: linear-gradient(135deg, #00E5FF, #1200FF);
+      background: linear-gradient(135deg, #6e6dc9, #1200FF);
       min-height: 100vh;
     }
     .glass {
@@ -29,6 +29,8 @@
       to { opacity: 1; transform: translateY(0); }
     }
     .animate-fadeIn { animation: fadeIn 0.3s ease forwards; }
+    .animate-pulse { animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
   </style>
 </head>
 <body class="text-white">
@@ -144,6 +146,8 @@
     const messagesEl = document.getElementById('messages');
     const inputEl = document.getElementById('input');
 
+    const API_URL = "https://wayne-worker-v1.mysvm.workers.dev/";
+
     document.getElementById('btnSidebar').onclick = () => sidebar.classList.toggle('hidden');
 
     document.getElementById('btnTheme').onclick = () => {
@@ -159,63 +163,82 @@
 
     document.getElementById('btnSend').onclick = sendMessage;
 
+    // Append message with id
+    function appendMessage(role, content){
+      const div = document.createElement('div');
+      const id = 'msg_' + Date.now() + Math.floor(Math.random()*1000);
+      div.id = id;
+      div.className = `flex items-start gap-2 animate-fadeIn ${role==='user'?'justify-end':'justify-start'}`;
+      div.innerHTML = `
+        ${role==='user'?'':'<div class="p-2 rounded-full bg-white/30"><i data-lucide="bot" class="w-4 h-4"></i></div>'}
+        <div class="p-3 rounded-lg border border-white/20 ${role==='user'?'bg-[#5691E5] max-w-xs':'bg-white/10 max-w-xs'}">${content}</div>
+        ${role==='user'?'<div class="p-2 rounded-full bg-[#5691E5]"><i data-lucide="user" class="w-4 h-4"></i></div>':''}
+      `;
+      messagesEl.appendChild(div);
+      if(document.getElementById('autoScroll').checked){
+        messagesEl.scrollTo({top: messagesEl.scrollHeight, behavior:'smooth'});
+      }
+      lucide.createIcons();
+      return id;
+    }
+
+    function updateMessage(id, newContent){
+      const msgDiv = document.getElementById(id);
+      if(msgDiv){
+        const contentDiv = msgDiv.querySelector('div:nth-child(2)');
+        contentDiv.innerHTML = newContent;
+      }
+    }
+
     function sendMessage(){
       const text = inputEl.value.trim();
       if(!text) return;
       appendMessage('user', text);
       inputEl.value = '';
-      setTimeout(() => appendMessage('ai', '🤖 Response to: ' + text), 500);
-    }
 
-    function appendMessage(role, content){
-      const div = document.createElement('div');
-      div.className = `flex items-start gap-2 animate-fadeIn ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-      div.innerHTML = `
-        ${role === 'user' ? '' : '<div class="p-2 rounded-full bg-white/30"><i data-lucide="bot" class="w-4 h-4"></i></div>'}
-        <div class="p-3 rounded-lg border border-white/20 ${role === 'user' ? 'bg-[#5691E5] max-w-xs' : 'bg-white/10 max-w-xs'}">${content}</div>
-        ${role === 'user' ? '<div class="p-2 rounded-full bg-[#5691E5]"><i data-lucide="user" class="w-4 h-4"></i></div>' : ''}
-      `;
-      messagesEl.appendChild(div);
-      if(document.getElementById('autoScroll').checked){
-        messagesEl.scrollTo({ top: messagesEl.scrollHeight, behavior: 'smooth' });
-      }
-      lucide.createIcons();
+      // Thinking effect
+      const thinkingId = appendMessage('ai', '<span class="animate-pulse">🤖 Thinking...</span>');
+
+      // Call AI API
+      fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify({ prompt: text })
+      })
+      .then(res => res.json())
+      .then(data => updateMessage(thinkingId, data.response || 'No response'))
+      .catch(err => updateMessage(thinkingId, 'Error: '+err.message));
     }
 
     // Upload photo
-    document.getElementById('uploadPhoto').addEventListener('change', e => {
+    document.getElementById('uploadPhoto').addEventListener('change', e=>{
       const file = e.target.files[0];
       if(file){
         const reader = new FileReader();
-        reader.onload = () => appendMessage('user', `<img src="${reader.result}" class="max-w-[150px] rounded-lg" />`);
+        reader.onload = ()=>appendMessage('user', `<img src="${reader.result}" class="max-w-[150px] rounded-lg" />`);
         reader.readAsDataURL(file);
       }
     });
 
-    // About Modal Logic
+    // About Modal
     const aboutModal = document.getElementById('aboutModal');
-    document.getElementById('btnAbout').onclick = () => aboutModal.classList.remove('hidden');
-    document.getElementById('closeAbout').onclick = () => aboutModal.classList.add('hidden');
+    document.getElementById('btnAbout').onclick = ()=>aboutModal.classList.remove('hidden');
+    document.getElementById('closeAbout').onclick = ()=>aboutModal.classList.add('hidden');
 
-    // Settings Modal Logic
+    // Settings Modal
     const settingsModal = document.getElementById('settingsModal');
-    document.getElementById('btnSettings').onclick = () => settingsModal.classList.remove('hidden');
-    document.getElementById('closeSettings').onclick = () => settingsModal.classList.add('hidden');
+    document.getElementById('btnSettings').onclick = ()=>settingsModal.classList.remove('hidden');
+    document.getElementById('closeSettings').onclick = ()=>settingsModal.classList.add('hidden');
 
-    // Force Dark Mode from settings
-    document.getElementById('darkModeToggle').onchange = e => {
-      if(e.target.checked){
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
+    // Dark Mode toggle
+    document.getElementById('darkModeToggle').onchange = e=>{
+      if(e.target.checked) root.classList.add('dark');
+      else root.classList.remove('dark');
       updateThemeIcon();
     };
 
-    // Language change (just logs for now)
-    document.getElementById('languageSelect').onchange = e => {
-      console.log('Language changed to', e.target.value);
-    };
+    // Language change
+    document.getElementById('languageSelect').onchange = e=>console.log('Language changed to', e.target.value);
   </script>
 </body>
-      </html>
+</html>
